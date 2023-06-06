@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Giphy Party!</title>
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/4/darkly/bootstrap.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .image-container {
+        width: 300px; /* Adjust the width of the container */
+        height: 300px; /* Adjust the height of the container */
+        overflow: hidden;
+      }
+      .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <form
+        id="search"
+        class="form-inline d-flex justify-content-center mt-4 mb-4"
+      >
+        <input
+          type="text"
+          id="searchinput"
+          name="search"
+          placeholder="Enter a search term"
+          class="form-control mr-2"
+        />
+        <input type="submit" class="btn btn-primary ml-2" value="ADD GIF!!!" />
+        <button id="Delete" class="btn btn-danger ml-2">DELTE!</button>
+      </form>
+      <!-- <form id="Delete">
+        <button>DELTE!</button>
+      </form> -->
+      <div id="main">
+        <div id="images" class="image-container"></div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <script>
+      console.log("Let's get this party started!");
+      //http://api.giphy.com/v1/gifs/search?q=hilarious&api_key=MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym
+
+      async function getRandomImg(myInput) {
+        const res = await axios.get(
+          `http://api.giphy.com/v1/gifs/search?q=${myInput}&api_key=MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym`
+        );
+        i = Math.floor(Math.random() * 50);
+        console.log(res.data);
+        console.log(res.data.data[i].images.preview_gif.url);
+        const gif = document.querySelector("#images");
+
+        let p = document.createElement("img");
+        p.src = res.data.data[i].images.downsized_medium.url;
+        gif.append(p);
+      }
+
+      const form = document.querySelector("#search");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const input = document.querySelector("#searchinput").value;
+        console.log(input.value);
+        getRandomImg(input);
+      });
+      const forma = document.querySelector("#Delete");
+      forma.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const gif = document.querySelector("#images");
+        gif.remove();
+        let g = document.createElement("div");
+        g.setAttribute("id", "images");
+        const main = document.querySelector("#main");
+        main.append(g);
+      });
+    </script>
+  </body>
+</html>
